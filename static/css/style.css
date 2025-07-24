@@ -1,0 +1,80 @@
+/* Базовые стили */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Изображения (фиксированные размеры) */
+.hamster {
+    width: 200px;  /* Фиксированная ширина */
+    height: auto;  /* Автоматическая высота */
+    cursor: pointer;
+    transition: transform 0.1s;
+    display: block; /* Убирает лишние отступы */
+    margin: 0 auto; /* Центрирование */
+}
+
+.coin-icon {
+    width: 24px;   /* Маленький размер */
+    height: 24px;
+    vertical-align: middle; /* Выравнивание с текстом */
+}
+
+/* Эффект клика */
+.click-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: gold;
+    opacity: 0;
+    pointer-events: none;
+    animation: float-up 1s ease-out;
+}
+
+@keyframes float-up {
+    0% { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -150%); }
+}
+
+/* Остальные стили (кнопки, прогресс-бар и т.д.) */
+.btn {
+    background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.achievements {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 10px;
+}

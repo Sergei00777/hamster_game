@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хомяк-Бизнесмен PRO 🐹💰</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Хомяк-Бизнесмен PRO</h1>
+            <div class="stats">
+                <div class="balance">
+                    <img src="{{ url_for('static', filename='images/coin.png') }}" class="coin-icon" alt="Монетка">
+                    <span id="balance">{{ balance }}</span>
+                </div>
+                <div class="click-power">
+                    💪 <span id="click-power">{{ click_power }}</span> $/клик
+                </div>
+                <div class="auto-clickers">
+                    ⚙️ <span id="auto-clickers">{{ auto_clickers }}</span> (💰<span id="auto-clicker-cost">{{ auto_clicker_cost }}</span>)
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="hamster-container" id="hamster-container">
+                <img src="{{ url_for('static', filename='images/hamster.png') }}" class="hamster" id="hamster" alt="Хомяк">
+                <div class="click-effect" id="click-effect">+{{ click_power }}</div>
+            </div>
+
+            <button class="btn" id="buy-auto-clicker">Купить автокликер ({{ auto_clicker_cost }} $)</button>
+
+            <div class="achievements" id="achievements">
+                <h3>🏆 Достижения</h3>
+                <ul id="achievements-list"></ul>
+            </div>
+        </main>
+    </div>
+
+    <audio id="click-sound" src="{{ url_for('static', filename='sounds/click.wav') }}"></audio>
+    <audio id="buy-sound" src="{{ url_for('static', filename='sounds/buy.wav') }}"></audio>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
