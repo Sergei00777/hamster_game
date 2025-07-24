@@ -1,80 +1,82 @@
 /* Базовые стили */
 body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
     margin: 0;
     padding: 20px;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    width: 100%;
-    max-width: 500px;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     text-align: center;
+    max-width: 400px;
+    width: 100%;
 }
 
-/* Изображения (фиксированные размеры) */
-.hamster {
-    width: 200px;  /* Фиксированная ширина */
-    height: auto;  /* Автоматическая высота */
+/* Изображения */
+.hamster-container {
+    margin: 20px auto;
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+#hamster {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     cursor: pointer;
     transition: transform 0.1s;
-    display: block; /* Убирает лишние отступы */
-    margin: 0 auto; /* Центрирование */
 }
 
-.coin-icon {
-    width: 24px;   /* Маленький размер */
-    height: 24px;
-    vertical-align: middle; /* Выравнивание с текстом */
+#hamster:active {
+    transform: scale(0.95);
 }
 
 /* Эффект клика */
-.click-effect {
+#click-effect {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: bold;
     color: gold;
-    opacity: 0;
-    pointer-events: none;
-    animation: float-up 1s ease-out;
+    display: none;
 }
 
-@keyframes float-up {
-    0% { opacity: 1; transform: translate(-50%, -50%); }
-    100% { opacity: 0; transform: translate(-50%, -150%); }
+@keyframes clickEffect {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -100px) scale(1.5); }
 }
 
-/* Остальные стили (кнопки, прогресс-бар и т.д.) */
+/* Кнопки */
 .btn {
     background: linear-gradient(90deg, #ff6b6b, #ff8e53);
-    border: none;
     color: white;
-    padding: 10px 20px;
+    border: none;
+    padding: 10px 15px;
     border-radius: 50px;
-    font-size: 1rem;
+    margin: 5px;
     cursor: pointer;
-    margin: 10px 0;
     transition: transform 0.2s;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
-.achievements {
-    margin-top: 20px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
+/* Оффлайн-доход */
+.offline-income {
+    margin-top: 15px;
     padding: 10px;
+    background: rgba(46, 204, 113, 0.2);
+    border-radius: 10px;
 }

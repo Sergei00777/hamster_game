@@ -1,65 +1,82 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Элементы
+    // Элементы интерфейса
+    const balanceElement = document.getElementById('balance');
+    const clickPowerElement = document.getElementById('click-power');
+    const clickPowerCostElement = document.getElementById('click-power-cost');
+    const autoClickerCostElement = document.getElementById('auto-clicker-cost');
     const hamster = document.getElementById('hamster');
     const clickEffect = document.getElementById('click-effect');
-    const balanceDisplay = document.getElementById('balance');
-    const clickPowerDisplay = document.getElementById('click-power');
-    const autoClickersDisplay = document.getElementById('auto-clickers');
-    const autoClickerCostDisplay = document.getElementById('auto-clicker-cost');
-    const buyAutoClickerBtn = document.getElementById('buy-auto-clicker');
-    const achievementsList = document.getElementById('achievements-list');
+    const offlineIncomeElement = document.getElementById('offline-amount');
 
-    // Звуки
-    const clickSound = document.getElementById('click-sound');
-    const buySound = document.getElementById('buy-sound');
-
-    // Загрузка из localStorage
-    let gameData = JSON.parse(localStorage.getItem('hamsterClickerData')) || {
+    // Загрузка сохранённых данных
+    let gameState = JSON.parse(localStorage.getItem('hamsterGame')) || {
         balance: 0,
-        clickPower: 1,
-        autoClickers: 0,
-        autoClickerCost: 10,
-        totalClicks: 0,
-        achievements: []
+        click_power: 1,
+        click_power_cost: 50,
+        auto_clickers: 0,
+        auto_clicker_cost: 10,
+        last_play_time: Date.now()
     };
 
     // Обновление интерфейса
     function updateUI() {
-        balanceDisplay.textContent = gameData.balance;
-        clickPowerDisplay.textContent = gameData.clickPower;
-        autoClickersDisplay.textContent = gameData.autoClickers;
-        autoClickerCostDisplay.textContent = gameData.autoClickerCost;
-        buyAutoClickerBtn.textContent = `Купить автокликер (${gameData.autoClickerCost} $)`;
+        balanceElement.textContent = gameState.balance.toFixed(2);
+        clickPowerElement.textContent = gameState.click_power;
+        clickPowerCostElement.textContent = gameState.click_power_cost;
+        autoClickerCostElement.textContent = gameState.auto_clicker_cost;
+        document.getElementById('click-value').textContent = gameState.click_power;
+    }
 
-        // Проверка достижений
-        checkAchievements();
+    // Проверка оффлайн-дохода
+    function checkOfflineIncome() {
+        const now = Date.now();
+        const offlineTime = Math.floor((now - gameState.last_play_time) / 1000);
+
+        if (offlineTime > 0 && gameState.auto_clickers > 0) {
+            const income = offlineTime * gameState.auto_clickers * 0.1;
+            gameState.balance += income;
+            offlineIncomeElement.textContent = income.toFixed(2);
+            gameState.last_play_time = now;
+            updateUI();
+            saveGame();
+        }
     }
 
     // Клик по хомяку
     hamster.addEventListener('click', () => {
-        gameData.balance += gameData.clickPower;
-        gameData.totalClicks += 1;
-        clickSound.currentTime = 0;
-        clickSound.play();
+        gameState.balance += gameState.click_power;
+        gameState.last_play_time = Date.now();
 
-        // Эффект клика
-        clickEffect.textContent = `+${gameData.clickPower}`;
+        // Анимация клика
+        clickEffect.style.display = 'block';
         clickEffect.style.animation = 'none';
         void clickEffect.offsetWidth;
-        clickEffect.style.animation = 'float-up 1s ease-out';
+        clickEffect.style.animation = 'clickEffect 0.5s';
+
+        setTimeout(() => {
+            clickEffect.style.display = 'none';
+        }, 500);
 
         updateUI();
         saveGame();
     });
 
-    // Покупка автокликера
-    buyAutoClickerBtn.addEventListener('click', () => {
-        if (gameData.balance >= gameData.autoClickerCost) {
-            gameData.balance -= gameData.autoClickerCost;
-            gameData.autoClickers += 1;
-            gameData.autoClickerCost = Math.floor(gameData.autoClickerCost * 1.5);
-            buySound.currentTime = 0;
-            buySound.play();
+    // Покупка улучшений
+    document.getElementById('buy-click-power').addEventListener('click', () => {
+        if (gameState.balance >= gameState.click_power_cost) {
+            gameState.balance -= gameState.click_power_cost;
+            gameState.click_power += 1;
+            gameState.click_power_cost = Math.floor(gameState.click_power_cost * 1.5);
+            updateUI();
+            saveGame();
+        }
+    });
+
+    document.getElementById('buy-auto-clicker').addEventListener('click', () => {
+        if (gameState.balance >= gameState.auto_clicker_cost) {
+            gameState.balance -= gameState.auto_clicker_cost;
+            gameState.auto_clickers += 1;
+            gameState.auto_clicker_cost = Math.floor(gameState.auto_clicker_cost * 1.8);
             updateUI();
             saveGame();
         }
@@ -67,37 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Автокликер
     setInterval(() => {
-        if (gameData.autoClickers > 0) {
-            gameData.balance += gameData.autoClickers;
+        if (gameState.auto_clickers > 0) {
+            gameState.balance += gameState.auto_clickers * 0.1;
+            gameState.last_play_time = Date.now();
             updateUI();
             saveGame();
         }
     }, 1000);
 
-    // Достижения
-    function checkAchievements() {
-        const achievements = [
-            { id: 'click_10', name: 'Новичок', condition: () => gameData.totalClicks >= 10 },
-            { id: 'click_100', name: 'Профи', condition: () => gameData.totalClicks >= 100 },
-            { id: 'balance_100', name: 'Богач', condition: () => gameData.balance >= 100 },
-            { id: 'auto_5', name: 'Автомагнат', condition: () => gameData.autoClickers >= 5 }
-        ];
-
-        achievements.forEach(ach => {
-            if (ach.condition() && !gameData.achievements.includes(ach.id)) {
-                gameData.achievements.push(ach.id);
-                const li = document.createElement('li');
-                li.textContent = ach.name;
-                achievementsList.appendChild(li);
-            }
-        });
-    }
-
     // Сохранение игры
     function saveGame() {
-        localStorage.setItem('hamsterClickerData', JSON.stringify(gameData));
+        localStorage.setItem('hamsterGame', JSON.stringify(gameState));
     }
 
-    // Загрузка при старте
+    // Инициализация
+    checkOfflineIncome();
     updateUI();
 });
